@@ -2,6 +2,8 @@ import tkinter
 import customtkinter
 from tkcalendar import DateEntry
 import datetime
+from src.service import readJason  # Import the readJason module
+
 
 # System Settings
 customtkinter.set_appearance_mode("System")
@@ -11,6 +13,14 @@ customtkinter.set_default_color_theme("blue")
 app = customtkinter.CTk()
 app.geometry("800x600")
 app.title("Deleware North Take Home Assignment")
+
+# Define a function to close the window
+def on_closing():
+    # Destroy the window
+    app.destroy()
+
+# Set the protocol for the window closing event
+app.protocol("WM_DELETE_WINDOW", on_closing)
 
 # Adding UI Elements
 title = customtkinter.CTkLabel(app, text="Deleware North Take Home Assignment", font=("Arial", 24))
@@ -43,6 +53,10 @@ from_date_input.grid(row=0, column=0, padx=20, sticky='w')
 # Adding a date to input
 to_date_input = DateEntry(date_frame, date_pattern='y-mm-dd', textvariable=to_date_var, state='disabled')
 to_date_input.grid(row=0, column=1, padx=20, sticky='w')
+
+# Button for submitting the dates
+submit_button = customtkinter.CTkButton(app, text="Submit", command=readJason.read_json)
+submit_button.pack(pady=10)
 
 # Run App
 app.mainloop()

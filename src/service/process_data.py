@@ -67,7 +67,7 @@ def calculate_rolling_average(date):
     return df
 
 
-calculate_rolling_average('2020-06-01')
+# calculate_rolling_average('2020-06-01')
 
 
 def calculate_positivity_rate(date):
@@ -90,8 +90,9 @@ def calculate_positivity_rate(date):
     df['new_results_reported'] = pd.to_numeric(df['new_results_reported'])
     df['total_results_reported'] = pd.to_numeric(df['total_results_reported'])
 
-    # Group the dataframe by 'state' and calculate the sum of 'new_results_reported' and 'total_results_reported' for each state
-    df_grouped = df.groupby('state').sum()
+    # Group the dataframe by 'state' and calculate the sum of 'new_results_reported' and 'total_results_reported' for
+    # each state
+    df_grouped = df.groupby('state')[['new_results_reported', 'total_results_reported']].sum()
 
     # Calculate the test positivity rate for each state
     df_grouped['positivity_rate'] = df_grouped['new_results_reported'] / df_grouped['total_results_reported']
@@ -99,7 +100,8 @@ def calculate_positivity_rate(date):
     # Sort the dataframe by the test positivity rate in descending order and get the top 10 states
     top_10_states = df_grouped['positivity_rate'].sort_values(ascending=False).head(10)
 
+    print(top_10_states)
     return top_10_states
 
 
-# calculate_positivity_rate('2020-06-01')
+calculate_positivity_rate('2020-08-01')

@@ -2,7 +2,7 @@ import tkinter
 import customtkinter
 from tkcalendar import DateEntry
 import datetime
-from src.service import readJason  # Import the readJason module
+from src.service import read_json_data  # Import the readJason module
 
 
 # System Settings
@@ -55,7 +55,7 @@ to_date_input = DateEntry(date_frame, date_pattern='y-mm-dd', textvariable=to_da
 to_date_input.grid(row=0, column=1, padx=20, sticky='w')
 
 # Button for submitting the dates
-submit_button = customtkinter.CTkButton(app, text="Submit", command=readJason.read_json)
+submit_button = customtkinter.CTkButton(app, text="Submit", command=read_json_data.read_json)
 submit_button.pack(pady=10)
 
 # Run App

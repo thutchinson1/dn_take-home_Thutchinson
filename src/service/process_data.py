@@ -1,5 +1,5 @@
 import pandas as pd
-import readJason  # Import the readJason module
+import read_json_data  # Import the readJason module
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 
@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # Return dataframe from read_json as dataframe
 def get_data():
     # Get the dataframe from the read_json file
-    df = readJason.read_json()
+    df = read_json_data.read_json()
 
     # Return the dataframe
     return df
@@ -58,8 +58,8 @@ def calculate_rolling_average(date):
     # df['7_day_average'] = df['new_results_reported'].rolling(window=7, min_periods=7, center=True).mean()  # center=True can be used to re-center the data to use the current date while still using all first 6 days
     df['7_day_average'] = df['new_results_reported'].rolling(window=7, min_periods=7).mean()
 
-    # # Get the last value of the '7_day_average' column
-    # print(df.loc[:, ['date', '7_day_average']])  # print the date and 7_day_average columns
+    # Get the last value of the '7_day_average' column
+    print(df.loc[:, ['date', '7_day_average']])  # print the date and 7_day_average columns
     #
     # # Plot the '7_day_average' column
     # df.plot.line(x='date', y='7_day_average')
@@ -102,3 +102,4 @@ def calculate_positivity_rate(date):
     return top_10_states
 
 
+# calculate_positivity_rate('2020-06-01')

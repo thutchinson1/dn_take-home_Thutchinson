@@ -3,14 +3,18 @@
 import json
 import pandas as pd
 
+
 # Open the JSON file
 def read_json():
     # Open the JSON file
-    with open('json/j8mb-icvb.json', "r") as f:
+    with open('../json/j8mb-icvb.json', "r") as f:
         data = json.load(f)
 
     # Create a DataFrame from the list of dictionaries
     df = pd.DataFrame(data)
 
-    # Print the DataFrame
-    print(df)
+    # Return the Dataframe
+    return df
+
+
+# read_json()

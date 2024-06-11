@@ -110,8 +110,8 @@ def calculate_positivity_rate(date):
     # Reset the index of the DataFrame to include the state names in the output
     top_10_states.reset_index(inplace=True)
 
-    print(top_10_states)
+    # print(top_10_states)
     return top_10_states
 
 
-calculate_positivity_rate('2020-08-01')
+# calculate_positivity_rate('2020-08-01')

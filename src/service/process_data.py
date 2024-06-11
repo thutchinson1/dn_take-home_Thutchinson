@@ -1,11 +1,10 @@
 import pandas as pd
-import read_json_data  # Import the readJason module
+from src.service import read_json_data  # Import the readJason module
 from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
 
 
 # Return dataframe from read_json as dataframe
-def get_data():
+def get_file_data():
     # Get the dataframe from the read_json file
     df = read_json_data.read_json()
 
@@ -18,7 +17,7 @@ def calculate_total_tests(date):
     date = pd.to_datetime(date)
 
     # Get the dataframe
-    df = get_data()
+    df = get_file_data()
 
     # Convert the 'date' column to datetime
     df['date'] = pd.to_datetime(df['date'])
@@ -44,7 +43,7 @@ def calculate_rolling_average(date):
     date = pd.to_datetime(date)
 
     # Get the dataframe
-    df = get_data()
+    df = get_file_data()
 
     # Convert the 'new_results_reported' column to numeric
     df['new_results_reported'] = pd.to_numeric(df['new_results_reported'])
@@ -59,15 +58,19 @@ def calculate_rolling_average(date):
     df = df[(df['date'] >= thirty_days_ago) & (df['date'] <= date)]
 
     # Calculate the 7-day rolling average of the 'new_results_reported' column
-    # df['7_day_average'] = df['new_results_reported'].rolling(window=7, min_periods=7, center=True).mean()  # center=True can be used to re-center the data to use the current date while still using all first 6 days
     df['7_day_average'] = df['new_results_reported'].rolling(window=7, min_periods=7).mean()
 
+    # Select only the 'state', 'total_results_reported', 'date', and '7_day_average' columns
+    df = df[['state', 'total_results_reported', 'date', '7_day_average']]
+
     # Get the last value of the '7_day_average' column
-    print(df.loc[:, ['date', '7_day_average']])  # print the date and 7_day_average columns
+    # print(df.loc[:, ['date', '7_day_average']])  # print the date and 7_day_average columns
     #
     # # Plot the '7_day_average' column
     # df.plot.line(x='date', y='7_day_average')
     # plt.show()
+    # return df.loc[:, ['date', '7_day_average']]  # return the date and 7_day_average columns
+
     return df
 
 
@@ -79,7 +82,7 @@ def calculate_positivity_rate(date):
     date = pd.to_datetime(date)
 
     # Get the dataframe
-    df = get_data()
+    df = get_file_data()
 
     # Convert the 'date' column to datetime
     df['date'] = pd.to_datetime(df['date'])
@@ -102,7 +105,10 @@ def calculate_positivity_rate(date):
     df_grouped['positivity_rate'] = df_grouped['new_results_reported'] / df_grouped['total_results_reported']
 
     # Sort the dataframe by the test positivity rate in descending order and get the top 10 states
-    top_10_states = df_grouped['positivity_rate'].sort_values(ascending=False).head(10)
+    top_10_states = df_grouped.sort_values(by='positivity_rate', ascending=False).head(10)
+
+    # Reset the index of the DataFrame to include the state names in the output
+    top_10_states.reset_index(inplace=True)
 
     print(top_10_states)
     return top_10_states

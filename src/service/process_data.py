@@ -32,11 +32,11 @@ def calculate_total_tests(date):
     # Calculate the total number of tests performed
     total_tests = df['total_results_reported'].sum()
 
-    print(total_tests)
+    # print(total_tests)
     return total_tests
 
 
-calculate_total_tests('2020-06-01')
+# calculate_total_tests('2020-06-01')
 
 
 def calculate_rolling_average(date):

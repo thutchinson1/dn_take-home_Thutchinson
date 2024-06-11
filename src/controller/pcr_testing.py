@@ -46,7 +46,7 @@ def get_data():
     with open(file_path, 'w') as f:
         json.dump(data, f)
 
-    return jsonify({"message": "Data saved successfully"}), 200
+    return json.dumps({"message": "Data saved successfully"}), 200
 
 
 if __name__ == '__main__':

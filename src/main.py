@@ -74,14 +74,6 @@ class App(customtkinter.CTk):
         # calculate the top ten states with the highest number of new results reported
         top_states = process_data.calculate_positivity_rate(from_date_str)
 
-        # Print the results in a readable format
-        print("\nTotal Tests Performed:")
-        print(total_tests)
-        print("\nRolling Average of New Results Reported:")
-        print(rolling_average)
-        print("\nTop Ten States with the Highest Number of New Results Reported:")
-        print(top_states)
-
         # Convert the DataFrames to strings with columns aligned
         total_tests_str = str(total_tests)
         rolling_average_str = rolling_average.to_string(justify='justify')

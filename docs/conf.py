@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# sample documentation build configuration file, created by
+# src documentation build configuration file, created by
 # sphinx-quickstart on Mon Apr 16 21:22:43 2012.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'sample'
-copyright = u'2012, Kenneth Reitz'
+project = u'src'
+copyright = u'2024, Titus Hutchinson'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -183,8 +183,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'sample.tex', u'sample Documentation',
-   u'Kenneth Reitz', 'manual'),
+  ('index', 'src.tex', u'src Documentation',
+   u'Titus Hutchinson', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -213,8 +213,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'sample', u'sample Documentation',
-     [u'Kenneth Reitz'], 1)
+    ('index', 'src', u'src Documentation',
+     [u'Titus Hutchinson'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -227,8 +227,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'sample', u'sample Documentation',
-   u'Kenneth Reitz', 'sample', 'One line description of project.',
+  ('index', 'src', u'src Documentation',
+   u'Titus Hutchinson', 'src', 'One line description of project.',
    'Miscellaneous'),
 ]
 

@@ -2,6 +2,7 @@ import requests
 from flask import Flask, jsonify
 import json
 import os
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -32,21 +33,26 @@ def get_data():
 
             offset += limit
     except requests.exceptions.RequestException as e:
-        return jsonify({"error": "Failed to fetch data", "message": str(e)}), 500
+        status_code = 500
+        return jsonify({"error": "Failed to fetch data", "message": str(e)}), status_code
 
-    # Define the directory and file path
-    directory = "../json"
-    file_name = "pcr_testing_data_download.json"
-    file_path = os.path.join(directory, file_name)
+    # # Define the directory and file path
+    # directory = "../json"
+    # file_name = "pcr_testing_data_download.json"
+    # file_path = os.path.join(directory, file_name)
+    #
+    # # Ensure the directory exists
+    # os.makedirs(directory, exist_ok=True)
+    #
+    # # Write the data to the file
+    # with open(file_path, 'w') as f:
+    #     json.dump(data, f)
 
-    # Ensure the directory exists
-    os.makedirs(directory, exist_ok=True)
+    # Convert the list of dictionaries into a DataFrame
+    df = pd.DataFrame(data)
 
-    # Write the data to the file
-    with open(file_path, 'w') as f:
-        json.dump(data, f)
-
-    return json.dumps({"message": "Data saved successfully"}), 200
+    status_code = 200
+    return df, status_code
 
 
 if __name__ == '__main__':

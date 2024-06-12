@@ -1,4 +1,6 @@
 import os
+
+import pandas as pd
 import requests
 import tkinter
 from tkinter import ttk
@@ -21,6 +23,8 @@ def check_and_update_data():
     # Join the directory and file name to get the full file path
     file_path = os.path.join(directory, file_name)
 
+    df = None  # Initialize the DataFrame
+
     # Check if the file exists
     if os.path.isfile(file_path):
         # Get the file's modification time
@@ -32,20 +36,23 @@ def check_and_update_data():
 
         # If the file is more than 7 days old, update the data
         if current_time - mod_time > timedelta(days=7):
-            get_data()
+            df, status_code = get_data()
 
     else:
         # If the file does not exist, update the data
-        get_data()
+        df, status_code = get_data()
+
+    return df  # Return the DataFrame
 
 
 if __name__ == "__main__":
     # Call the function at the start of your application
-    check_and_update_data()
+    df = check_and_update_data()
 
     # System Settings
     customtkinter.set_appearance_mode("System")
     customtkinter.set_default_color_theme("blue")
+
 
 class App(customtkinter.CTk):
     def __init__(self, *args, **kwargs):
@@ -66,13 +73,13 @@ class App(customtkinter.CTk):
         from_date_str = from_date_input.get()
 
         # Get the total number of tests performed up to the provided date
-        total_tests = process_data.calculate_total_tests(from_date_str)
+        total_tests = process_data.calculate_total_tests(from_date_str, df)
 
         # Get the rolling average of new results reported for the provided date
-        rolling_average = process_data.calculate_rolling_average(from_date_str)
+        rolling_average = process_data.calculate_rolling_average(from_date_str, df)
 
         # calculate the top ten states with the highest number of new results reported
-        top_states = process_data.calculate_positivity_rate(from_date_str)
+        top_states = process_data.calculate_positivity_rate(from_date_str, df)
 
         # Convert the DataFrames to strings with columns aligned
         total_tests_str = str(total_tests)
@@ -118,7 +125,8 @@ class App(customtkinter.CTk):
         rolling_average_str = rolling_average.to_string(justify='center')
         self.rolling_average_text = tkinter.Text(self, height=150, width=350, yscrollcommand=self.scrollbar.set)
         self.rolling_average_text.tag_configure('center', justify='center')
-        self.rolling_average_text.insert('end', f"Rolling Average of New Results Reported:\n\n{rolling_average_str}", 'center')
+        self.rolling_average_text.insert('end', f"Rolling Average of New Results Reported:\n\n{rolling_average_str}",
+                                         'center')
         self.rolling_average_text.pack(side="top", fill="both", expand=True, padx=0, pady=0)
         self.scrollbar.config(command=self.rolling_average_text.yview)
 
@@ -171,7 +179,6 @@ date_label.grid(row=0, column=0, padx=20, sticky='w')
 # Adding a date from input
 from_date_input = DateEntry(date_frame, date_pattern='y-mm-dd', textvariable=from_date_var)
 from_date_input.grid(row=0, column=1, padx=20, sticky='w')
-
 
 # # Adding a date to input
 # to_date_input = DateEntry(date_frame, date_pattern='y-mm-dd', textvariable=to_date_var, state='disabled')

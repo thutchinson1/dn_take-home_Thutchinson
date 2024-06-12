@@ -3,21 +3,21 @@ from src.service import read_json_data  # Import the readJason module
 from datetime import datetime, timedelta
 
 
-# Return dataframe from read_json as dataframe
-def get_file_data():
-    # Get the dataframe from the read_json file
-    df = read_json_data.read_json()
+# # Return dataframe from read_json as dataframe
+# def get_file_data():
+#     # Get the dataframe from the read_json file
+#     df = read_json_data.read_json()
+#
+#     # Return the dataframe
+#     return df
 
-    # Return the dataframe
-    return df
 
-
-def calculate_total_tests(date):
+def calculate_total_tests(date, df: pd.DataFrame):
     # Convert the input date to datetime
     date = pd.to_datetime(date)
 
-    # Get the dataframe
-    df = get_file_data()
+    # # Get the dataframe
+    # df = get_file_data()
 
     # Convert the 'date' column to datetime
     df['date'] = pd.to_datetime(df['date'])
@@ -26,7 +26,7 @@ def calculate_total_tests(date):
     df = df[df['date'] < date]
 
     # Convert the 'total_results_reported' column to numeric
-    df['total_results_reported'] = pd.to_numeric(df['total_results_reported'])
+    df.loc[:, 'total_results_reported'] = pd.to_numeric(df['total_results_reported'])
 
     # Calculate the total number of tests performed
     total_tests = df['total_results_reported'].sum()
@@ -38,27 +38,27 @@ def calculate_total_tests(date):
 # calculate_total_tests('2020-06-01')
 
 
-def calculate_rolling_average(date):
+def calculate_rolling_average(date, df: pd.DataFrame):
     # Convert the input date to datetime
     date = pd.to_datetime(date)
 
-    # Get the dataframe
-    df = get_file_data()
+    # # Get the dataframe
+    # df = get_file_data()
 
     # Convert the 'new_results_reported' column to numeric
-    df['new_results_reported'] = pd.to_numeric(df['new_results_reported'])
+    df.loc[:, 'new_results_reported'] = pd.to_numeric(df['new_results_reported'])
 
     # Convert the 'date' column to datetime
-    df['date'] = pd.to_datetime(df['date'])
+    df.loc[:, 'date'] = pd.to_datetime(df['date'])
 
     # Calculate the date 30 days before the provided date
     thirty_days_ago = date - timedelta(days=30)
 
     # Filter the dataframe to include only rows where the 'date' column is within the range
-    df = df[(df['date'] >= thirty_days_ago) & (df['date'] <= date)]
+    df = df.loc[(df['date'] >= thirty_days_ago) & (df['date'] <= date)].copy()
 
     # Calculate the 7-day rolling average of the 'new_results_reported' column
-    df['7_day_average'] = df['new_results_reported'].rolling(window=7, min_periods=7).mean()
+    df.loc[:, '7_day_average'] = df['new_results_reported'].rolling(window=7, min_periods=7).mean()
 
     # Select only the 'state', 'total_results_reported', 'date', and '7_day_average' columns
     df = df[['state', 'total_results_reported', 'date', '7_day_average']]
@@ -77,25 +77,26 @@ def calculate_rolling_average(date):
 # calculate_rolling_average('2020-06-01')
 
 
-def calculate_positivity_rate(date):
+def calculate_positivity_rate(date, df: pd.DataFrame):
     # Convert the input date to datetime
     date = pd.to_datetime(date)
 
-    # Get the dataframe
-    df = get_file_data()
+    # # Get the dataframe
+    # df = get_file_data()
 
     # Convert the 'date' column to datetime
-    df['date'] = pd.to_datetime(df['date'])
+    df.loc[:, 'date'] = pd.to_datetime(df['date'])
 
     # Calculate the date 30 days before the provided date
     thirty_days_ago = date - timedelta(days=30)
 
     # Filter the dataframe to include only rows where the 'date' column is within the range
-    df = df[(df['date'] >= thirty_days_ago) & (df['date'] <= date)]
+    df = df.loc[(df['date'] >= thirty_days_ago) & (df['date'] <= date)].copy()
 
     # Convert the 'new_results_reported' and 'total_results_reported' columns to numeric
-    df['new_results_reported'] = pd.to_numeric(df['new_results_reported'])
-    df['total_results_reported'] = pd.to_numeric(df['total_results_reported'])
+    df.loc[:, 'new_results_reported'] = pd.to_numeric(df['new_results_reported'])
+    df.loc[:, 'total_results_reported'] = pd.to_numeric(df['total_results_reported'])
+
 
     # Group the dataframe by 'state' and calculate the sum of 'new_results_reported' and 'total_results_reported' for
     # each state

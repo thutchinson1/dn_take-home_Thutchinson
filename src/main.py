@@ -87,7 +87,7 @@ class App(customtkinter.CTk):
         top_states_str = top_states.to_string(justify='justify')
 
         # Create a markdown file and write the data to it
-        with open('output.md', 'w') as f:
+        with open('Metric and Documentation Output.md', 'w') as f:
             f.write(f"# Total Tests Performed as of yesterday: \n\n{total_tests_str}\n\n")
             f.write(f"# Rolling Average of New Results Reported:\n\n```\n{rolling_average_str}\n```\n\n")
             f.write(f"# Top Ten States with the Highest Number of New Results Reported:\n\n```\n{top_states_str}\n```\n\n")

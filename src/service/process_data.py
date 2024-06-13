@@ -16,14 +16,14 @@ def calculate_total_tests(date, df: pd.DataFrame):
     # Convert the input date to datetime
     date = pd.to_datetime(date)
 
-    # # Get the dataframe
-    # df = get_file_data()
+    # Calculate yesterday's date
+    yesterday = date - timedelta(days=1)
 
     # Convert the 'date' column to datetime
     df['date'] = pd.to_datetime(df['date'])
 
-    # Filter the dataframe to include only rows where the 'date' column is less than the provided date
-    df = df[df['date'] < date]
+    # Filter the dataframe to include only rows where the 'date' column is less than or equal to yesterday's date
+    df = df[df['date'] <= yesterday]
 
     # Convert the 'total_results_reported' column to numeric
     df.loc[:, 'total_results_reported'] = pd.to_numeric(df['total_results_reported'])

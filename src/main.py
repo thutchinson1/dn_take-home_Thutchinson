@@ -86,9 +86,23 @@ class App(customtkinter.CTk):
         rolling_average_str = rolling_average.to_string(justify='justify')
         top_states_str = top_states.to_string(justify='justify')
 
+        # Create a markdown file and write the data to it
+        with open('Metric and Documentation Output.md', 'w') as f:
+            f.write(f"# Total Tests Performed as of yesterday: \n\n{total_tests_str}\n\n")
+            f.write(f"# Rolling Average of New Results Reported:\n\n```\n{rolling_average_str}\n```\n\n")
+            f.write(f"# Top Ten States with the Highest Number of New Results Reported:\n\n```\n{top_states_str}\n```\n\n")
+            f.write("## Metric Documentation\n\n")
+            f.write("### Total Tests Performed\n\n")
+            f.write("This metric represents the total number of tests performed up to the provided date.\n\n")
+            f.write("### Rolling Average of New Results Reported\n\n")
+            f.write("This metric represents the 7-day rolling average of new results reported for the provided date. "
+                    "It calculates the average number of new cases reported per day for the last 7 days, for each day in the last 30 days.\n\n")
+            f.write("### Top Ten States with the Highest Number of New Results Reported\n\n")
+            f.write("This metric represents the top ten states with the highest number of new results reported for the provided date.\n\n")
+
         # Create CTkText widgets to display the results
         self.total_tests_text = customtkinter.CTkTextbox(self, height=30, width=550)
-        self.total_tests_text.insert('end', f"Total Tests Performed: {total_tests_str}")
+        self.total_tests_text.insert('end', f"Total Tests Performed as of yesterday: {total_tests_str}")
         self.total_tests_text.pack(pady=10)
 
         # Convert the DataFrame to a list of lists
@@ -129,6 +143,8 @@ class App(customtkinter.CTk):
                                          'center')
         self.rolling_average_text.pack(side="top", fill="both", expand=True, padx=0, pady=0)
         self.scrollbar.config(command=self.rolling_average_text.yview)
+
+
 
 
 # Our app frame

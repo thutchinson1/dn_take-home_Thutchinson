@@ -2,6 +2,8 @@ import os
 
 import pandas as pd
 import requests
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 import tkinter
 from tkinter import ttk
 import customtkinter
@@ -77,20 +79,34 @@ class App(customtkinter.CTk):
 
         # Get the rolling average of new results reported for the provided date
         rolling_average = process_data.calculate_rolling_average(from_date_str, df)
+        rolling_average['7_day_average'] = rolling_average['7_day_average'].round(2)
 
         # calculate the top ten states with the highest number of new results reported
         top_states = process_data.calculate_positivity_rate(from_date_str, df)
+        top_states['positivity_rate'] = top_states['positivity_rate'] * 100
+        top_states.rename(columns={'positivity_rate': 'positivity_rate (%)'}, inplace=True)
 
         # Convert the DataFrames to strings with columns aligned
-        total_tests_str = str(total_tests)
+        total_tests_str = format(total_tests, ',')
         rolling_average_str = rolling_average.to_string(justify='justify')
         top_states_str = top_states.to_string(justify='justify')
 
+        index_list = pd.to_datetime(rolling_average.iloc[:, 2]).tolist()
+        values_list = rolling_average.iloc[:, 3].tolist()
+
+        # Create a scatter plot for the rolling_average
+        plt.figure(figsize=(13, 9))
+        plt.scatter(index_list, values_list)
+        plt.title('Rolling Average of New Results Reported')
+        plt.xlabel('Date')
+        plt.ylabel('Rolling Average')
+        date_format = mdates.DateFormatter('%d-%m')
+        plt.gca().xaxis.set_major_formatter(date_format)
+        plt.grid(True)
+        plt.savefig('rolling_average_scatter_plot.png')
+
         # Create a markdown file and write the data to it
         with open('Metric and Documentation Output.md', 'w') as f:
-            f.write(f"# Total Tests Performed as of yesterday: \n\n{total_tests_str}\n\n")
-            f.write(f"# Rolling Average of New Results Reported:\n\n```\n{rolling_average_str}\n```\n\n")
-            f.write(f"# Top Ten States with the Highest Number of New Results Reported:\n\n```\n{top_states_str}\n```\n\n")
             f.write("## Metric Documentation\n\n")
             f.write("### Total Tests Performed\n\n")
             f.write("This metric represents the total number of tests performed up to the provided date.\n\n")
@@ -98,7 +114,13 @@ class App(customtkinter.CTk):
             f.write("This metric represents the 7-day rolling average of new results reported for the provided date. "
                     "It calculates the average number of new cases reported per day for the last 7 days, for each day in the last 30 days.\n\n")
             f.write("### Top Ten States with the Highest Number of New Results Reported\n\n")
-            f.write("This metric represents the top ten states with the highest number of new results reported for the provided date.\n\n")
+            f.write(
+                "This metric represents the top ten states with the highest number of new results reported for the provided date. The positivity rate is displayed as a percentage.\n\n")
+            f.write(f"# Total Tests Performed as of yesterday - Date(2024-06-13): \n\n{total_tests_str}\n\n")
+            f.write(
+                f"# Rolling Average of New Results Reported - Date(2024-06-13):\n\n```\n{rolling_average_str}\n```\n\n")
+            f.write("![Rolling Average of New Results Reported](rolling_average_scatter_plot.png)\n\n")
+            f.write(f"# Top Ten States with the Highest Number of New Results Reported - Date(2024-06-13):\n\n```\n{top_states_str}\n```\n\n")
 
         # Create CTkText widgets to display the results
         self.total_tests_text = customtkinter.CTkTextbox(self, height=30, width=550)
